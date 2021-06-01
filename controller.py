@@ -1,6 +1,6 @@
 import tkinter as tk
 import serial as srl
-
+import controller_backend as ctbe
 
 mainWindow = tk.Tk()
 mainWindow.title('RP100 Controller')
@@ -137,6 +137,12 @@ source2MoreSlew = tk.Button(
     fg="black",
 )
 source2MoreSlew.grid(row=3, column=5)
-
+def printCur(*args):
+    print(chosenDevice.get())
+comDevices = tuple(ctbe.listPossibleSerials())
+chosenDevice = tk.StringVar()
+chosenDevice.set(comDevices[-1])
+deviceDropdown = tk.OptionMenu(frame, chosenDevice, *comDevices, command = printCur)
+deviceDropdown.grid(row=4,columnspan=6)
 #start window
 mainWindow.mainloop()
