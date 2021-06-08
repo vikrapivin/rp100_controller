@@ -102,6 +102,18 @@ def multiplySlewBy10Device2():
 def divideSlewBy10Device2():
     curSetSlew = curDevice.getSetSlew(deviceNum=2)
     curDevice.setSlew(deviceNum=2,numSlew = curSetSlew / 10.0)
+def zeroStrainCell():
+    # get current set parameters, but I do not think this is necessary to do
+    # originalSlewRate1 = curDevice.getSetSlew(deviceNum=1)
+    # originalSlewRate2 = curDevice.getSetSlew(deviceNum=2)
+    # curSetVolt1 = curDevice.getSetVoltage(deviceNum=1)
+    # curSetVolt2 = curDevice.getSetVoltage(deviceNum=2)
+    curDevice.setVoltage(deviceNum=1,numVolts = 100.0)
+    curDevice.setVoltage(deviceNum=2,numVolts = 100.0)
+    curDevice.setSlew(deviceNum=1,numSlew = 1.0)
+    curDevice.setSlew(deviceNum=2,numSlew = 1.0)
+    curDevice.setVoltage(deviceNum=1,numVolts = 0.0)
+    curDevice.setVoltage(deviceNum=2,numVolts = 0.0)
 
 # source 1
 source1Label = tk.Label(master=frame, text='Source 1')
@@ -246,7 +258,18 @@ chosenDevice = tk.StringVar()
 chosenDevice.set(comDevices[-1])
 curDevice = ctbe.rp100(chosenDevice.get())
 deviceDropdown = tk.OptionMenu(frame, chosenDevice, *comDevices, command = openNewDevice)
-deviceDropdown.grid(row=4,columnspan=6)
+deviceDropdown.grid(row=4,column =2,columnspan=3)
+
+source2MoreSlew = tk.Button(
+    master=frame, 
+    text="Zero the Strain Cell",
+    width=15,
+    height=3,
+    bg="white",
+    fg="black",
+    command = zeroStrainCell,
+)
+source2MoreSlew.grid(row=4, column=0,columnspan=2)
 
 mainWindow.after(msUpdateSpeed, updateVolts)
 mainWindow.after(msUpdateSpeed, updateSlew)
