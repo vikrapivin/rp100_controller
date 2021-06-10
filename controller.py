@@ -107,13 +107,24 @@ def zeroStrainCell():
     # originalSlewRate1 = curDevice.getSetSlew(deviceNum=1)
     # originalSlewRate2 = curDevice.getSetSlew(deviceNum=2)
     # curSetVolt1 = curDevice.getSetVoltage(deviceNum=1)
-    # curSetVolt2 = curDevice.getSetVoltage(deviceNum=2)
+    # curSetVolt2 = curDevice.getSetVoltage(deviceNum=2) # 
+    curDevice.setSlew(deviceNum=1,numSlew = 100.0)
+    curDevice.setSlew(deviceNum=2,numSlew = 100.0)
     curDevice.setVoltage(deviceNum=1,numVolts = 100.0)
     curDevice.setVoltage(deviceNum=2,numVolts = 100.0)
+    # wait two minutes and then have it go back
+    mainWindow.after(1000*120, zeroStrainCellPart2)
+    zeroStrainButton["state"] = tk.DISABLED
+    zeroStrainButton["text"] = "Zeroing-In Process"
+    return
+def zeroStrainCellPart2():
     curDevice.setSlew(deviceNum=1,numSlew = 1.0)
     curDevice.setSlew(deviceNum=2,numSlew = 1.0)
     curDevice.setVoltage(deviceNum=1,numVolts = 0.0)
     curDevice.setVoltage(deviceNum=2,numVolts = 0.0)
+    zeroStrainButton["state"] = tk.NORMAL
+    zeroStrainButton["text"] = "Zero the Strain Cell"
+    return
 
 # source 1
 source1Label = tk.Label(master=frame, text='Source 1')
@@ -260,7 +271,7 @@ curDevice = ctbe.rp100(chosenDevice.get())
 deviceDropdown = tk.OptionMenu(frame, chosenDevice, *comDevices, command = openNewDevice)
 deviceDropdown.grid(row=4,column =2,columnspan=3)
 
-source2MoreSlew = tk.Button(
+zeroStrainButton = tk.Button(
     master=frame, 
     text="Zero the Strain Cell",
     width=15,
@@ -269,7 +280,7 @@ source2MoreSlew = tk.Button(
     fg="black",
     command = zeroStrainCell,
 )
-source2MoreSlew.grid(row=4, column=0,columnspan=2)
+zeroStrainButton.grid(row=4, column=0,columnspan=2)
 
 mainWindow.after(msUpdateSpeed, updateVolts)
 mainWindow.after(msUpdateSpeed, updateSlew)
